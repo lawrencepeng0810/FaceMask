@@ -4,7 +4,7 @@
 <!DOCTYPE html> 
 <html>
 <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">        
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/jquery-twzipcode@1.7.14/jquery.twzipcode.min.js"></script>
@@ -12,109 +12,150 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <style>
-            * {
-                font-family: 微軟正黑體;
+                * {
+                    font-family: 微軟正黑體;
+                 }
+              .jumbotron {
+                    max-height: 300px !important;
+                }
+                .bg-primary {
+                    background-color: #454851 !important;
+                }
+                a {
+                    font-size: 14px !important;
+                    background-color: #454851 !important; 
+                    border-color: #fff !important;
+                }
+                h4 {
+                    background-color: #fff;
+                    border-radius: 5px;
+                    text-align: center;
+                    padding: 5px;
+                    color: #000;
+                }
+                 
+                #list {
+                    color: #fff;
+                }
+                ul > li {
+                    font-size: 14px;
+                    list-style: none;
+                    margin-bottom: 7px;
+                }
+                ul > li > img {
+                    width: 10%;     
+                    filter:invert(1);           
+                    -webkit-filter:invert(1);
+                }
+                ul > li:nth-child(4) {
+                    font-size: 18px;
+                    margin-top: 5px;
+                    text-align: center;
+                    line-height: 60px;
+                    color:#000;
+                }
+                
+                #twzipcode > select , #twzipcode > input {              
+                    border-radius: 5px !important;
+                    border-style: solid;
+                }
+                #menu > ul {
+                    width: auto;
+                    list-style-type: none;
+                    margin: 0;
+                    padding: 0;
+                    overflow: hidden;
+                }
+                #menu > ul > li {
+                    float:left;
+                    display: block;
+                    text-align: center;
+                    padding: 16px;
+                }    
+            @media screen and (max-width: 600px) {
+                #imgbox {
+                    margin:0 auto;
+                    width: 100%;
+                    height: auto;
+                    top: -210px;
+                    position: relative;
+                    float: left;
+                    background: #999;
+                }
+                .close {
+                    background: #999;
+                    border-radius: 12px;
+                    line-height: 20px;
+                    text-align: center;
+                    height: 20px;
+                    width: 20px;
+                    font-size: 18px;
+                    padding: 1px;
+                    top: -8px;
+                    right: -1%;
+                    position: absolute;
+                    z-index: 1;
+                }
+                .close::before {
+                    content: "\2716";
+                }
+                #imgbox > #content {   
+                    border: 2px solid #999;
+                    position: absolute;
+                    float: left;
+                    border-radius: 5px;
+                }
+                
+                #imgbox > #content > img {
+                    max-width: 100%;
+                    height: auto;
+                }
+	        }
+            @media screen and (min-width: 600px) {
+               
+            /*#twzipcode  {
+                    width: 30%;
+                    margin: 0 auto !important;
+                    display: flex !important;
+                }
+                */
+                #imgbox {
+                    width: 100%;
+                    height: auto;
+                    top: -310px;
+                    position: relative;
+                    float: left;
+                    background: #999;
+                }
+                .close {
+                    background: #999;
+                    border-radius: 12px;
+                    line-height: 20px;
+                    text-align: center;
+                    height: 20px;
+                    width: 20px;
+                    font-size: 18px;
+                    padding: 1px;
+                    top: -11px;
+                    right: 343px;
+                    position: absolute;
+                    z-index: 1;
+                }
+                .close::before {
+                    content: "\2716";
+                }
+                #imgbox > #content {   
+                    border: 2px solid #999;
+                    position: absolute;
+                    left: 22%;
+                    float: left;
+                    border-radius: 5px;
+                }
+                #imgbox > #content > img {
+                    max-width: 100%;
+                    height: auto;
+                }
             }
-            .jumbotron {
-                max-height: 300px !important;
-            }
-            .bg-primary {
-                background-color: #454851 !important;
-            }
-            a {
-                font-size: 14px !important;
-                background-color: #454851 !important; 
-                border-color: #fff !important;
-            }
-            h4 {
-                background-color: #fff;
-                border-radius: 5px;
-                text-align: center;
-                padding: 5px;
-                color: #000;
-            }
-
-            #list {
-                color: #fff;
-            }
-            ul > li {
-                font-size: 14px;
-                list-style: none;
-                margin-bottom: 7px;
-            }
-            ul > li > img {
-                width: 10%;     
-                filter:invert(1);           
-                -webkit-filter:invert(1);
-            }
-            ul > li:nth-child(4) {
-                font-size: 18px;
-                margin-top: 5px;
-                text-align: center;
-                line-height: 60px;
-                color:#000;
-            }
-           
-           /*#twzipcode  {
-                width: 30%;
-                margin: 0 auto !important;
-                display: flex !important;
-            }
-            */
-            #twzipcode > select , #twzipcode > input {              
-                border-radius: 5px !important;
-                border-style: solid;
-            }
-            #menu > ul {
-               width: auto;
-               list-style-type: none;
-               margin: 0;
-               padding: 0;
-               overflow: hidden;
-            }
-            #menu > ul > li {
-                float:left;
-                display: block;
-                text-align: center;
-                padding: 16px;
-            }    
-            #imgbox {
-                width: 100%;
-                height: auto;
-                top: -310px;
-                position: relative;
-                float: left;
-                background: #999;
-            }
-            .close {
-                background: #999;
-                border-radius: 12px;
-                line-height: 20px;
-                text-align: center;
-                height: 20px;
-                width: 20px;
-                font-size: 18px;
-                padding: 1px;
-                top: -11px;
-                right: 343px;
-                position: absolute;
-                z-index: 1;
-            }
-            .close::before {
-                content: "\2716";
-            }
-            #imgbox > #content {   
-                border: 2px solid #999;
-                position: absolute;
-                left: 22%;
-                float: left;
-                border-radius: 5px;
-            }
-            #imgbox > #content > img {
-                max-width: 100%;
-                height: auto;
-            }
-            
         </style>
     </head>
     <body>
