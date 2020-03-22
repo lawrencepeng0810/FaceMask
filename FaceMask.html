@@ -1,0 +1,329 @@
+
+<!-- https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json-->
+
+<!DOCTYPE html> 
+<html>
+<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-twzipcode@1.7.14/jquery.twzipcode.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <style>
+            * {
+                font-family: 微軟正黑體;
+            }
+            .jumbotron {
+                max-height: 300px !important;
+            }
+            .bg-primary {
+                background-color: #454851 !important;
+            }
+            a {
+                font-size: 14px !important;
+                background-color: #454851 !important; 
+                border-color: #fff !important;
+            }
+            h4 {
+                background-color: #fff;
+                border-radius: 5px;
+                text-align: center;
+                padding: 5px;
+                color: #000;
+            }
+
+            #list {
+                color: #fff;
+            }
+            ul > li {
+                font-size: 14px;
+                list-style: none;
+                margin-bottom: 7px;
+            }
+            ul > li > img {
+                width: 10%;     
+                filter:invert(1);           
+                -webkit-filter:invert(1);
+            }
+            ul > li:nth-child(4) {
+                font-size: 18px;
+                margin-top: 5px;
+                text-align: center;
+                line-height: 60px;
+                color:#000;
+            }
+           
+           /*#twzipcode  {
+                width: 30%;
+                margin: 0 auto !important;
+                display: flex !important;
+            }
+            */
+            #twzipcode > select , #twzipcode > input {              
+                border-radius: 5px !important;
+                border-style: solid;
+            }
+            #menu > ul {
+               width: auto;
+               list-style-type: none;
+               margin: 0;
+               padding: 0;
+               overflow: hidden;
+            }
+            #menu > ul > li {
+                float:left;
+                display: block;
+                text-align: center;
+                padding: 16px;
+            }    
+            #imgbox {
+                width: 100%;
+                height: auto;
+                top: -310px;
+                position: relative;
+                float: left;
+                background: #999;
+            }
+            .close {
+                background: #999;
+                border-radius: 12px;
+                line-height: 20px;
+                text-align: center;
+                height: 20px;
+                width: 20px;
+                font-size: 18px;
+                padding: 1px;
+                top: -11px;
+                right: 343px;
+                position: absolute;
+                z-index: 1;
+            }
+            .close::before {
+                content: "\2716";
+            }
+            #imgbox > #content {   
+                border: 2px solid #999;
+                position: absolute;
+                left: 22%;
+                float: left;
+                border-radius: 5px;
+            }
+            #imgbox > #content > img {
+                max-width: 100%;
+                height: auto;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <script type="application/javascript">
+            $(function () {
+                var Input_County; // user 輸入
+                var Input_Town;  // user 輸入              
+                var node = ""; // Custome Json Format
+                let count=0;
+                
+                
+                //$('#imgbox').html("<img src='CoronaVirus.png'>");
+                $('#twzipcode').twzipcode({
+                    
+                });
+                $(':input').attr('readonly', true);
+                    $("select:eq(0)").change(function () {
+                        Input_County = $("select:eq(0)").val();
+                        //(Input_County);
+                       // alert(county);
+                        Input_Town = $("select:eq(1)").val();
+                       // alert(town);
+                        CustomAjax(Input_County, Input_Town);
+                    });
+                    $("select:eq(1)").change(function () {
+                        Input_Town = $("select:eq(1)").val();
+                        //  alert(town);
+                      CustomAjax(Input_County, Input_Town);
+                    });
+                $('.close').click(function(){
+                   $('#imgbox').remove();
+                });
+            });
+            
+            $(document).ready(function() {
+                //$('#twzipcode').twzipcode({
+                //});
+                //var county = $(selector).twzipcode('get', 'county');
+                //alert(county);
+                //$('#twzipcode > input').attr('readonly', true);
+               // $(':input').attr('readonly', true);
+            });
+                
+            function CustomAjax(Input_County,  Input_Town) {
+                $.ajax({
+                    url: "https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json",   //存取Json的網址             
+                    type: "GET",
+                    cache: false,
+                    dataType: "json",
+                    //contentType: "application/json",
+                    
+                    success: function (data) { 
+                        var Result = new Array();                                       
+                        for (var i = 0; i<data.features.length; i++) {
+                            if (data.features[i].properties.address.substring(0,3) == Input_County && data.features[i].properties.town == Input_Town) {                                     
+                                node = {
+                                        'address': data.features[i].properties.address,
+                                        'county': data.features[i].properties.county,
+                                        'mask_adult': data.features[i].properties.mask_adult,
+                                        'mask_child': data.features[i].properties.mask_child,
+                                        'name': data.features[i].properties.name,
+                                        'note': data.features[i].properties.note,
+                                        'phone': data.features[i].properties.phone, 
+                                }
+                                Result.push(node);     
+                            }
+                        }          
+                       
+                        data = Result;                   
+                        
+                        // ok
+                        //console.log(data.features[0].properties.address);   
+                        //方法一 (回傳1筆資料)                
+                        //$.each(data, function (index, element) {
+                            //Result = (element[0].properties);
+                        //});
+                        // console.log(Result.address);
+                        //方法二 (回傳多筆資料)                               
+                        //for (var i = 0; i<data.features.length; i++) {
+                            //alert(data.features[i].properties.address);    
+                            //$('#menu').append('<li>' + data.features[i].properties.address + '</li>');    
+                        //}          
+
+                        $("#list > div").remove(); // Remove Last Time List
+
+                        var li;
+                        var TotalCard = data.length;
+                        var TotalLi = 5;
+                        
+                        for (var i = 0; i < TotalCard; i++) {
+                            $('#list').append($('<div>', { class : 'col-md-4 mb-5' }));
+                            $('.col-md-4').html("<div class='card' style='background-color: #334054;'>card</div>");     
+                            $('.card').html("<div class='card-body'>card-body</div>");                       
+                            $('.card-body').html($('<ul>', { class : "list-group" }));  
+                                for (var k = 0; k < TotalLi; k++) {
+                                    $('<li/>').appendTo('ul');
+                                } 
+                            // Card-footer
+                            $('.card').append($('<div>', { class : "card-footer" }));
+                            $('.card-footer').html($('<a>', { class : "btn btn-primary", href : "#", target : "blank" }));
+                            $("a").text("Google Map查詢!");
+                        }
+                        for (var k = 0; k < TotalCard; k++) {
+                            $('.card > .card-body > ul:eq(' + k +') > li:eq(0)').html("<h4 class='card-title'>" + data[k].name);
+                            $('.card > .card-body > ul:eq(' + k +') > li:eq(1)').html("<img src='Address.png'>" + " " + data[k].address);
+                            $('.card > .card-body > ul:eq(' + k +') > li:eq(2)').html("<img src='Phone.png'>" + " "+ data[k].phone);
+                            $('.card > .card-body > ul:eq(' + k +') > li:eq(3)').html("<div style='background-color:#ffaa00; width:49%; height:60px; float:left; border-radius:5px; margin-right:1%;'> 成人口罩 : " + data[k].mask_adult + "</div><div style='background-color:#dfdddf; width:49%; height:60px; float:left; border-radius:5px; margin-left:1%;'> 兒童口罩 : " + data[k].mask_child + "</div>");
+                            $('.card > .card-body > ul:eq(' + k +') > li:eq(4)').html("<span>" + data[k].note + "</span>");
+                            $('a:eq(' + k +')').attr("href", "https://www.google.com/maps/place/" + data[k].address);
+                        }  
+
+                    /*                 
+                        var li;
+                        var TotalCard = 12;
+                        var TotalLi = 5;
+                        for (var i = 0; i < TotalCard; i++) {
+                            $('#list').append($('<div>', { class : 'col-md-4 mb-5' }));
+                            $('.col-md-4').html("<div class='card' style='background-color: #334054;'>card</div>");     
+                            $('.card').html("<div class='card-body'>card-body</div>");                       
+                            $('.card-body').html($('<ul>', { class : "list-group" }));  
+                                for (var k = 0; k < TotalLi; k++) {
+                                    $('<li/>').appendTo('ul');
+                                } 
+                            // Card-footer
+                            $('.card').append($('<div>', { class : "card-footer" }));
+                            $('.card-footer').html($('<a>', { class : "btn btn-primary", href : "#", target : "blank" }));
+                            $("a").text("Google Map查詢!");
+                        }
+                        for (var k = 0; k<TotalCard; k++) {
+                            $('.card > .card-body > ul:eq(' + k +') > li:eq(0)').html("<h4 class='card-title'>" + data.features[k].properties.name);
+                            $('.card > .card-body > ul:eq(' + k +') > li:eq(1)').html("<img src='Address.png'>" + " " + data.features[k].properties.address);
+                            $('.card > .card-body > ul:eq(' + k +') > li:eq(2)').html("<img src='Phone.png'>" + " "+ data.features[k].properties.phone);
+                            $('.card > .card-body > ul:eq(' + k +') > li:eq(3)').html("<div style='background-color:#ffaa00; width:49%; height:60px; float:left; border-radius:5px; margin-right:1%;'> 成人口罩 : " + data.features[k].properties.mask_adult + "</div><div style='background-color:#dfdddf; width:49%; height:60px; float:left; border-radius:5px; margin-left:1%;'> 兒童口罩 : " + data.features[k].properties.mask_child + "</div>");
+                            $('.card > .card-body > ul:eq(' + k +') > li:eq(4)').html("<span>" + data.features[k].properties.note + "</span>");
+                            $('a:eq(' + k +')').attr("href", "https://www.google.com/maps/place/" + data.features[k].properties.address);
+                        }  
+                        */    
+                            
+                        /*
+                        var j=1;        
+                        for (var i = 1; i<=1; i++) {
+                            
+                            // 用此方法 會變成第二筆找到前一筆相同 Class , 造成巢狀式DIV 不要使用此方式
+                            //alert(data.features[i].properties.address); 
+                            // Create Div 
+                            // $('#content').append($('<div>', { id:'list' + i}));
+                            // Append Content
+                            //$('.card').append($('<h4>', { id:'list' + i, class : "card-title" }));
+                            /*
+                            $('#list').append($('<div>', { class : "col-md-4 mb-5" }));
+                            $('.col-md-4').append($('<div>', { class : "card" }));
+                            $('.card').append($('<div>', { class : "card-body" }));
+                            $('.card-body').append($('<h4>', { class : "card-title" }));   
+                            $('.card-title').append(data.features[i].properties.name);  
+
+                            $('.card-body').append($('<ul>', { class : "list-group" }));   
+                                for (var k = 0; k<4; k++) {
+                                    var li = $('<li/>').appendTo('ul');
+                                }  
+                                // List                          
+                                $("ul").find("li").eq(0).text(data.features[i].properties.address);
+                                $("ul").find("li").eq(1).text(data.features[i].properties.phone);
+                                $("ul").find("li").eq(2).text("成人口罩 : " + data.features[i].properties.mask_adult);
+                                $("ul").find("li").eq(3).text("兒童口罩 : " + data.features[i].properties.mask_child);
+                            
+                            // Card-footer
+                            $('.card').append($('<div>', { class : "card-footer" }));
+                            $('.card-footer').append($('<a>', { class : "btn btn-primary", href : "https://www.google.com/maps/place/"+data.features[i].properties.address + "/@25.0428323,121.5431319,17z/data=!4m10!1m2!2m1!1z5Y-w5YyX5biC5aSn5a6J5Y2A5a6J5p2x6KGXNTDvvI016JmfMeaokw!3m6!1s0x0:0xd85396239e11b36d!8m2!3d25.042779!4d121.5425541!9m1!1b1", target : "blank" }));
+                            $("a").text("Google Map查詢!");
+                            
+                        }   */
+                    },
+                    error: function(error) {
+                        alert(error.responseText);
+                    }
+                });
+            }
+        </script>
+        <main role="main">
+            <section class="jumbotron text-center">
+              <div class="container">
+                <h1>口罩搜查隊</h1>
+                <p class="lead text-muted">
+                    <p>找找口罩...</p>
+                </p>                
+                <div id="container">
+                    <div id="twzipcode"></div><p></p>
+                    </div>
+                </div>    
+                <div id="container">
+                    <div id="menu">
+                       <span>疫情訊息 | 關於這裡</span>
+                    </div>
+                </div>                
+              </div>
+            </section>
+        
+            <div class="container">
+                <div class="row" id="list">
+                </div>                      
+            </div>
+            
+            <div id="imgbox">
+                    <span class="close"></span>
+                    <div id="content">
+                        <img src='CoronaVirus.png'>
+                    </div>
+            </div>
+        </main>
+        
+    </body>
+</html>
